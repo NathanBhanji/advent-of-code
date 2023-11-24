@@ -3,35 +3,79 @@
 
 import { input } from "./input";
 
-function calculateWins(input: string): number {
+const player1 = ["A", "B", "C"];
+const player2 = ["X", "Y", "Z"];
+
+function part1(input: string, player1: string[], player2: string[]): number {
   const inputs = input.split("\n");
-  const mappings =  new Map([['A','X'],['B','Y'],['C','Z']]);
   let score = 0;
   for (const i of inputs) {
-    const [player1, player2] = i.split(" ");
-    
-    switch (player2) {
-        case "X":
-            score += 1;
-            player1 === "C" ? (score += 6) : (score += 0);
-            break;
-        case "Y":
-            score += 2;
-            player1 === "A" ? (score += 6) : (score += 0);
-            break;
-        case "Z":
-            score += 3;
-            player1 === "B" ? (score += 6) : (score += 0);
-            break;
-    }
-    if (mappings.has(player1)) {
-        const mappedValue = mappings.get(player1);
-        if (mappedValue === player2) {
-            score += 3;
-        }
+    const [p1, p2] = i.split(" ");
+    const p1Index = player1.indexOf(p1);
+    const p2Index = player2.indexOf(p2);
+
+    score += p2Index + 1;
+    if (p1Index === p2Index) {
+      score += 3;
+    } else if (p2Index === 0 && p1Index === 2) {
+      score += 6;
+    } else if (p2Index === 1 && p1Index === 0) {
+      score += 6;
+    } else if (p2Index === 2 && p1Index === 1) {
+      score += 6;
     }
   }
   return score;
 }
 
-console.log(calculateWins(input));
+function getLosingIndex(opponentIndex: number): number {
+  switch (opponentIndex) {
+    case 0:
+      return 2;
+    case 1:
+      return 0;
+    case 2:
+      return 1;
+    default:
+      throw new Error("Invalid input");
+  }
+}
+
+function getWinningIndex(opponentIndex: number): number {
+  switch (opponentIndex) {
+    case 0:
+      return 1;
+    case 1:
+      return 2;
+    case 2:
+      return 0;
+    default:
+      throw new Error("Invalid input");
+  }
+}
+
+function part2(input: string, player1: string[], player2: string[]): number {
+  const inputs = input.split("\n");
+  let score = 0;
+  for (const i of inputs) {
+    const [p1, p2] = i.split(" ");
+    const p1Index = player1.indexOf(p1);
+    const p2Index = player2.indexOf(p2);
+
+    switch (p2Index) {
+      case 0:
+        score += getLosingIndex(p1Index) + 1;
+        break;
+      case 1:
+        score += p1Index + 1 + 3;
+        break;
+      case 2:
+        score += getWinningIndex(p1Index) + 1 + 6;
+        break;
+    }
+  }
+  return score;
+}
+
+console.log(part1(input, player1, player2));
+console.log(part2(input, player1, player2));
