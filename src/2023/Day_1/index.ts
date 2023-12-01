@@ -48,3 +48,5 @@ assert.equal(part2(testInput2.split("\n")), 281);
 
 console.log(part1(input.split("\n")));
 console.log(part2(input.split("\n")));
+
+// eat shit branch protection
